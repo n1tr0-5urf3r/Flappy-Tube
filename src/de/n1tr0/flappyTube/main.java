@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 /**
  *
@@ -21,14 +22,10 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
     private final player Player = new player();
     private final obstacles Ground = new obstacles();
-    public obstacles[] obstacle = new obstacles[100];
-    public obstacles[] obstacle2 = new obstacles[100];
+    public obstacles[] obstacleTop = new obstacles[5];
+    public obstacles[] obstacleBot = new obstacles[5];
     private final Ground Ground_pic = new Ground();
     public int zufallszahl;
-    public int randYtop;
-    public int randYbot;
-
-
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
 
     private boolean isAlive;
@@ -36,114 +33,66 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     public main() {
         initComponents();
 
+        setContentPane(new JLabel(new ImageIcon("src/resources/background.png")));
+
         // Initialize the player
         getContentPane().add(Player);
         Player.setStatus(true);
         Player.setFocusable(true);
         Player.addKeyListener(this);
 
-        // The Player will fall continously down from the beginning if he doesn't do anything
-        generateObstacle();
-        checkGround();
-        PlayerFalling();
-
         // Inititalize Borders
         getContentPane().add(Ground);
         Ground.setLocation(30, 190);
+        Player.setLocation(30, 120);
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
+
+        // The Player will fall continously down from the beginning if he doesn't do anything
+        generateObstacle();
+        checkGround();
+
+        // Start checking for each tube
+        for (int i = 0; i < obstacleTop.length; i++) {
+            System.out.println(i);
+            checkPlayerDieded(i);
+        }
+
+        PlayerFalling();
+
     }
 
     public void generateObstacle() {
 
-        Thread generatingTop = new Thread() {
-            public void run() {
-                while (Player.getStatus()) {
-                    for (int i = 0; i < 10; i++) {
-                        zufallszahl=(int)(Math.random() *3000)+2000; 
-                        randYtop();
-                        obstacle2[i] = new obstacles();
-                        getContentPane().add(obstacle2[i]);
-                        obstacle2[i].setLocation(600, randYtop);
-                        obstacle2[i].setDisabledIcon(TubeInv);
-                        moveObstacleTop(i);
-                        try {
-                            Thread.sleep(zufallszahl);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+        for (int i = 0; i < 5; i++) {
+            // new Obstacle in Array
+            obstacleBot[i] = new obstacles();
+            // Add new Obstacle to pane
+            getContentPane().add(obstacleBot[i]);
+            // Generate random distances between obstacles
+            obstacleBot[i].randYbot();
+            obstacleBot[i].randXbot();
+            // Set obstacle to random position
+            obstacleBot[i].setLocation(150 + obstacleBot[i].randXbot() * i, obstacleBot[i].randYbot);
+        }
 
-                }
-            }
-        };
-        generatingTop.start();
-
-        Thread generatingBot = new Thread() {
-            public void run() {
-                while (Player.getStatus()) {
-                    for (int i = 0; i < 10; i++) {
-                        zufallszahl=(int)(Math.random() *3000)+2000;
-                        randYbot();
-                        obstacle[i] = new obstacles();
-                        getContentPane().add(obstacle[i]);
-                        obstacle[i].setLocation(700, randYbot);
-                        moveObstacleBot(i);
-                        try {
-                            Thread.sleep(zufallszahl);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-
-                }
-            }
-        };
-        generatingBot.start();
-    }
-
-    public void moveObstacleBot(int i) {
-        Thread moveObstacle = new Thread() {
-            public void run() {
-                while (Player.getStatus()) {
-                    for (int j = 0; j < 100; j++) {
-                        obstacle[i].setLocation(obstacle[i].getX() - 10, obstacle[i].getY());
-                        try {
-                            Thread.sleep(400);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-        };
-        moveObstacle.start();
-    }
-    
-    public void moveObstacleTop(int i) {
-        Thread moveObstacle = new Thread() {
-            public void run() {
-                while (Player.getStatus()) {
-                    for (int j = 0; j < 7; j++) {
-                        obstacle2[i].setLocation(obstacle2[i].getX() - 10, obstacle2[i].getY());
-                        try {
-                            Thread.sleep(400);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            }
-        };
-        moveObstacle.start();
+        for (int i = 0; i < 5; i++) {
+            obstacleTop[i] = new obstacles();
+            getContentPane().add(obstacleTop[i]);
+            obstacleTop[i].randYtop();
+            obstacleTop[i].randXtop();
+            obstacleTop[i].setLocation(150 + obstacleTop[i].randXtop() * i, obstacleTop[i].randYtop);
+            obstacleTop[i].setDisabledIcon(TubeInv);
+        }
     }
 
     public void checkGround() {
+
         Thread ground = new Thread() {
-            @Override
+
             public void run() {
                 while (Player.getStatus()) {
-                    System.out.println(Player.getStatus());
+                    //System.out.println(Player.getStatus());
                     if (Player.getY() >= Ground.getY()) {
                         // Player dieded
                         System.out.println("dieded");
@@ -160,7 +109,6 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         Thread falling = new Thread() {
             public void run() {
                 while (Player.getStatus()) {
-                    System.out.println(Player.getStatus());
                     Player.fallDown(1, 2);
                     try {
                         Thread.sleep(50);
@@ -172,13 +120,30 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         };
         falling.start();
     }
-    
-    private void randYtop(){
-        randYtop=(int)(Math.random() *30)+60;
-    }
-    
-    private void randYbot(){
-        randYbot=(int)(Math.random() *40)+170;
+
+    private void checkPlayerDieded(int i) {
+        // Location of obstacle is in bottom left corner!
+
+        Thread PlayerDieded = new Thread() {
+            public void run() {
+                while (Player.getStatus()) {
+                    System.out.println(Player.getStatus());
+                    System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
+                    System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
+                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY()+Player.getHeight() >= obstacleBot[i].getY()) {
+                        Player.setStatus(false);
+                        System.out.println("Dieded!");
+                    }
+                    if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight())) {
+                        Player.setStatus(false);
+                        System.out.println("Dieded!");
+                    }
+
+                }
+            }
+        };
+        PlayerDieded.start();
+
     }
 
     public void keyTyped(KeyEvent e) {
@@ -193,9 +158,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                     @Override
                     public void run() {
                         for (int i = 0; i < 3; i++) {
-                            Player.jumpUp(8, 8);
+                            Player.jumpUp(8, 13);
                             try {
-                                Thread.sleep(100);
+                                Thread.sleep(50);
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                             }

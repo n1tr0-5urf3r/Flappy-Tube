@@ -5,6 +5,7 @@
  */
 package de.n1tr0.flappyTube;
 
+import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 
 /**
@@ -14,8 +15,9 @@ import javax.swing.JRadioButton;
 public class player extends JRadioButton {
 
     private boolean alive;
-    private final int width = 70;
-    private final int height = 50;
+    private final int width = 30;
+    private final int height = 30;
+    private final ImageIcon Player = new ImageIcon("src/resources/player.png");
 
     public player() {
         super();
@@ -26,7 +28,8 @@ public class player extends JRadioButton {
 
     private void init() {
         alive = true;
-        this.setBounds(height, width, height, width);
+        this.setBounds(30, 120, height, width);
+        this.setIcon(Player);
     }
 
     public boolean getStatus() {

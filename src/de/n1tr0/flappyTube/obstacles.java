@@ -17,6 +17,10 @@ public class obstacles extends JRadioButton {
     private final int width = 50;
     private final int height = 70;
     private final ImageIcon Tube = new ImageIcon("src/resources/tube.png");
+    public int randYtop;
+    public int randYbot;
+    public int randXbot;
+    public int randXtop;
 
     public obstacles() {
         super();
@@ -25,9 +29,30 @@ public class obstacles extends JRadioButton {
     }
 
     private void init() {
-        this.setBounds(height, width, height, width);
+        this.setBounds(30, 190, width, height);
         this.setEnabled(false);
         this.setIcon(Tube);
         this.setDisabledIcon(Tube);
+        
     }
+    
+        public void randYtop() {
+        randYtop = (int) (Math.random() * 30) + 23;
+    }
+
+    public void randYbot() {
+        randYbot = (int) (Math.random() * 40) + 160;
+    }
+    
+    public int randXbot() {
+        randXbot = (int) (Math.random() * 50) + 80;
+        return randXbot;
+    }
+    
+    public int randXtop() {
+        randXbot = (int) (Math.random() * 50) + 80;
+        return randXbot;
+    }
+    
+
 }
