@@ -43,7 +43,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
         // Inititalize Borders
         getContentPane().add(Ground);
-        Ground.setLocation(30, 190);
+        Ground.setLocation(30, 205);
         Player.setLocation(30, 120);
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
@@ -92,7 +92,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
             public void run() {
                 while (Player.getStatus()) {
-                    //System.out.println(Player.getStatus());
+                    System.out.println(Player.getStatus());
                     if (Player.getY() >= Ground.getY()) {
                         // Player dieded
                         System.out.println("dieded");
@@ -158,6 +158,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                     @Override
                     public void run() {
                         for (int i = 0; i < 3; i++) {
+                            Player.setEnabled(false);
                             Player.jumpUp(8, 13);
                             try {
                                 Thread.sleep(50);
@@ -165,6 +166,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
+                        Player.setEnabled(true);
                         for (int i = 0; i < 3; i++) {
                             Player.jumpDown(2, 3);
                             try {
@@ -173,6 +175,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
+                        
                     }
                 };
                 move.start();

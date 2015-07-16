@@ -37,7 +37,7 @@ public class obstacles extends JRadioButton {
     }
     
         public void randYtop() {
-        randYtop = (int) (Math.random() * 30) + 23;
+        randYtop = (int) (Math.random() * 30) + 10;
     }
 
     public void randYbot() {

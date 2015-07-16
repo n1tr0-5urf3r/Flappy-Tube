@@ -30,6 +30,7 @@ public class player extends JRadioButton {
         alive = true;
         this.setBounds(30, 120, height, width);
         this.setIcon(Player);
+        this.setDisabledIcon(Player);
     }
 
     public boolean getStatus() {
