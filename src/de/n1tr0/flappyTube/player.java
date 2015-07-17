@@ -18,6 +18,7 @@ public class player extends JRadioButton {
     private final int width = 30;
     private final int height = 30;
     private final ImageIcon Player = new ImageIcon("src/resources/player.png");
+    public int level;
 
     public player() {
         super();
@@ -31,6 +32,7 @@ public class player extends JRadioButton {
         this.setBounds(30, 120, height, width);
         this.setIcon(Player);
         this.setDisabledIcon(Player);
+        this.setLevel(1);
     }
 
     public boolean getStatus() {
@@ -51,6 +53,22 @@ public class player extends JRadioButton {
 
     public void fallDown(int X, int Y) {
         this.setLocation((this.getX() + X), (this.getY() + Y));
+    }
+
+    public void addLevel(int level) {
+        this.level = this.level + level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+
+    public void resetLocation() {
+        this.setLocation(30, 120);
     }
 
 }

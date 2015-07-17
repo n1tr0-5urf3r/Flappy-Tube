@@ -20,13 +20,24 @@ import javax.swing.JLabel;
  */
 public class main extends javax.swing.JFrame implements ActionListener, KeyListener {
 
+    // Player
     private final player Player = new player();
+
+    // Borders/obstacles
     private final obstacles Ground = new obstacles();
     public obstacles[] obstacleTop = new obstacles[5];
     public obstacles[] obstacleBot = new obstacles[5];
+    private final obstacles levelEnd = new obstacles();
+
+    // Graphics
     private final Ground Ground_pic = new Ground();
-    public int zufallszahl;
+    private final hud levelHud = new hud();
+
+    // Random number for distance between tube
+    //public int zufallszahl;
+    // Icons
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
+    private final ImageIcon Test = new ImageIcon("src/resources/player.png");
 
     private boolean isAlive;
 
@@ -41,12 +52,26 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         Player.setFocusable(true);
         Player.addKeyListener(this);
 
-        // Inititalize Borders
+        // Inititalize Objects
+        // Ground
         getContentPane().add(Ground);
         Ground.setLocation(30, 205);
+
+        // Player
         Player.setLocation(30, 120);
+
+        // Texture for ground
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
+
+        // Level end
+        getContentPane().add(levelEnd);
+        levelEnd.setLocation(630, 150);
+        //levelEnd.setDisabledIcon(Test);
+
+        // Hud
+        getContentPane().add(levelHud);
+        levelHud.setText("Level " + Player.getLevel());
 
         // The Player will fall continously down from the beginning if he doesn't do anything
         generateObstacle();
@@ -57,7 +82,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             System.out.println(i);
             checkPlayerDieded(i);
         }
-
+        checkLevelSuccess();
         PlayerFalling();
 
     }
@@ -121,6 +146,25 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         falling.start();
     }
 
+    private void checkLevelSuccess() {
+        Thread level = new Thread() {
+            public void run() {
+                while (Player.getStatus()) {
+                    System.out.println(Player.getStatus());
+                    if (Player.getX() + Player.getWidth() >= levelEnd.getX()) {
+                        //Player.setStatus(false);
+                        Player.addLevel(1);
+                        levelHud.setText("Level " + Player.getLevel());
+                        System.out.println("Level " + Player.getLevel() + " complete !");
+                        Player.resetLocation();
+
+                    }
+                }
+            }
+        };
+        level.start();
+    }
+
     private void checkPlayerDieded(int i) {
         // Location of obstacle is in bottom left corner!
 
@@ -128,9 +172,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             public void run() {
                 while (Player.getStatus()) {
                     System.out.println(Player.getStatus());
-                    System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
-                    System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
-                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY()+Player.getHeight() >= obstacleBot[i].getY()) {
+                    //System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
+                    //System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
+                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                     }
@@ -175,7 +219,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                                 Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        
+
                     }
                 };
                 move.start();
