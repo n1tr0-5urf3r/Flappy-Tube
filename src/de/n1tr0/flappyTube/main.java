@@ -5,10 +5,13 @@
  */
 package de.n1tr0.flappyTube;
 
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -32,9 +35,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     // Graphics
     private final Ground Ground_pic = new Ground();
     private final hud levelHud = new hud();
+    private final hud debugHud = new hud();
 
     // Random number for distance between tube
-    //public int zufallszahl;
     // Icons
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
     private final ImageIcon Test = new ImageIcon("src/resources/player.png");
@@ -72,6 +75,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Hud
         getContentPane().add(levelHud);
         levelHud.setText("Level " + Player.getLevel());
+        getContentPane().add(debugHud);
+        debugHud.setBounds(500, 40, 200, 80);
+        debugHud.setText("Debugging");
 
         // The Player will fall continously down from the beginning if he doesn't do anything
         generateObstacle();
@@ -108,6 +114,18 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             obstacleTop[i].randXtop();
             obstacleTop[i].setLocation(150 + obstacleTop[i].randXtop() * i, obstacleTop[i].randYtop);
             obstacleTop[i].setDisabledIcon(TubeInv);
+        }
+    }
+
+    public void removeObstacle() {
+        for (int i = 0; i < 5; i++) {
+            getContentPane().remove(obstacleTop[i]);
+            debugHud.setText("Removed " + i);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            getContentPane().remove(obstacleBot[i]);
+            debugHud.setText("Removed " + i);
         }
     }
 
@@ -152,11 +170,12 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                 while (Player.getStatus()) {
                     System.out.println(Player.getStatus());
                     if (Player.getX() + Player.getWidth() >= levelEnd.getX()) {
-                        //Player.setStatus(false);
                         Player.addLevel(1);
                         levelHud.setText("Level " + Player.getLevel());
                         System.out.println("Level " + Player.getLevel() + " complete !");
                         Player.resetLocation();
+                        removeObstacle();
+                        generateObstacle();
 
                     }
                 }
