@@ -33,11 +33,12 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     private final Ground Ground_pic = new Ground();
     private final hud levelHud = new hud();
     private final hud debugHud = new hud();
+    private final Ground zomg = new Ground();
 
-    // Random number for distance between tube
     // Icons
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
     private final ImageIcon Test = new ImageIcon("src/resources/player.png");
+    private final ImageIcon zomg_png = new ImageIcon("src/resources/zomg.png");
 
     private boolean isAlive;
 
@@ -60,9 +61,16 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Player
         Player.setLocation(30, 120);
 
-        // Texture for ground
+        // Textures
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
+        getContentPane().add(zomg);
+        zomg.setText(".");
+
+        zomg.setEnabled(false);
+        zomg.setDisabledIcon(zomg_png);
+        zomg.setSize(50, 30);
+        zomg.setVisible(false);
 
         // Level end
         getContentPane().add(levelEnd);
@@ -138,7 +146,8 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         System.out.println("dieded");
                         levelHud.setText("Dieded!");
                         Player.setStatus(false);
-
+                        zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
+                        zomg.setVisible(true);
                     }
                 }
             }
@@ -195,11 +204,15 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
+                        zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
+                        zomg.setVisible(true);
                     }
                     if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight())) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
+                        zomg.setLocation(Player.getX(), Player.getY() + Player.getHeight());
+                        zomg.setVisible(true);
                     }
 
                 }
