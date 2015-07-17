@@ -40,6 +40,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
     private final ImageIcon Test = new ImageIcon("src/resources/player.png");
     private final ImageIcon zomg_png = new ImageIcon("src/resources/zomg.png");
+    private final ImageIcon border = new ImageIcon("src/resources/border.png");
 
     boolean temp;
 
@@ -66,8 +67,6 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
         getContentPane().add(zomg);
-        zomg.setText(".");
-
         zomg.setEnabled(false);
         zomg.setDisabledIcon(zomg_png);
         zomg.setSize(50, 30);
@@ -75,8 +74,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
         // Level end
         getContentPane().add(levelEnd);
-        levelEnd.setLocation(630, 150);
-        //levelEnd.setDisabledIcon(Test);
+        levelEnd.setLocation(630, 0);
+        levelEnd.setSize(10, 360);
+        levelEnd.setDisabledIcon(border);
 
         // Hud
         getContentPane().add(levelHud);
@@ -118,6 +118,12 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             obstacleBot[i].randXbot();
             // Set obstacle to random position
             obstacleBot[i].setLocation(150 + obstacleBot[i].randXbot() * i, obstacleBot[i].randYbot);
+            if (i > 0) {
+                if ((obstacleBot[i].getX() - obstacleBot[i - 1].getX()) < 50) {
+                    obstacleBot[i].setLocation(obstacleBot[i].getX() + 70, obstacleBot[i].getY());
+                    debugHud.setText("Rearranged Bot " + i);
+                }
+            }
         }
 
         for (int i = 0; i < 5; i++) {
@@ -127,6 +133,13 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             obstacleTop[i].randXtop();
             obstacleTop[i].setLocation(150 + obstacleTop[i].randXtop() * i, obstacleTop[i].randYtop);
             obstacleTop[i].setDisabledIcon(TubeInv);
+
+            if (i > 0) {
+                if ((obstacleTop[i].getX() - obstacleTop[i - 1].getX()) < 50) {
+                    obstacleTop[i].setLocation(obstacleTop[i].getX() + 70, obstacleTop[i].getY());
+                    debugHud.setText("Rearranged Top " + i);
+                }
+            }
         }
     }
 
@@ -208,14 +221,14 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                     devnull.setText(String.valueOf(Player.getStatus()));
                     //System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
                     //System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
-                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
+                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() - 7 && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
                         zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
                         zomg.setVisible(true);
                     }
-                    if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight())) {
+                    if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight() - 7)) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
@@ -252,7 +265,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         }
                         Player.setEnabled(true);
                         for (int i = 0; i < 3; i++) {
-                            Player.jumpDown(2, 3);
+                            Player.jumpDown(2, 2);
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
