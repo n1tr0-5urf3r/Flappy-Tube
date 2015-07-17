@@ -33,6 +33,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     private final Ground Ground_pic = new Ground();
     private final hud levelHud = new hud();
     private final hud debugHud = new hud();
+    private final hud devnull = new hud();
     private final Ground zomg = new Ground();
 
     // Icons
@@ -40,7 +41,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     private final ImageIcon Test = new ImageIcon("src/resources/player.png");
     private final ImageIcon zomg_png = new ImageIcon("src/resources/zomg.png");
 
-    private boolean isAlive;
+    boolean temp;
 
     public main() {
         initComponents();
@@ -80,9 +81,16 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Hud
         getContentPane().add(levelHud);
         levelHud.setText("Level " + Player.getLevel());
+
+        // Debugging
         getContentPane().add(debugHud);
-        debugHud.setBounds(500, 40, 200, 80);
+        debugHud.setBounds(530, 10, 200, 80);
         debugHud.setText("Debugging");
+
+        getContentPane().add(devnull);
+        devnull.setBounds(450, 10, 200, 80);
+        devnull.setText("Status of Player");
+        devnull.setVisible(false);
 
         // The Player will fall continously down from the beginning if he doesn't do anything
         generateObstacle();
@@ -90,7 +98,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
         // Start checking for each tube
         for (int i = 0; i < obstacleTop.length; i++) {
-            System.out.println(i);
+            //System.out.println(i);
             checkPlayerDieded(i);
         }
         checkLevelSuccess();
@@ -140,7 +148,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
             public void run() {
                 while (Player.getStatus()) {
-                    System.out.println(Player.getStatus());
+                    devnull.setText(String.valueOf(Player.getStatus()));
                     if (Player.getY() >= Ground.getY()) {
                         // Player dieded
                         System.out.println("dieded");
@@ -175,7 +183,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         Thread level = new Thread() {
             public void run() {
                 while (Player.getStatus()) {
-                    System.out.println(Player.getStatus());
+                    devnull.setText(String.valueOf(Player.getStatus()));
                     if (Player.getX() + Player.getWidth() >= levelEnd.getX()) {
                         Player.addLevel(1);
                         levelHud.setText("Level " + Player.getLevel());
@@ -197,7 +205,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         Thread PlayerDieded = new Thread() {
             public void run() {
                 while (Player.getStatus()) {
-                    System.out.println(Player.getStatus());
+                    devnull.setText(String.valueOf(Player.getStatus()));
                     //System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
                     //System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
                     if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
