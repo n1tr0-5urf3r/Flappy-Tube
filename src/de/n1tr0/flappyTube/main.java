@@ -5,13 +5,10 @@
  */
 package de.n1tr0.flappyTube;
 
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -139,6 +136,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                     if (Player.getY() >= Ground.getY()) {
                         // Player dieded
                         System.out.println("dieded");
+                        levelHud.setText("Dieded!");
                         Player.setStatus(false);
 
                     }
@@ -196,10 +194,12 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                     if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
+                        levelHud.setText("Dieded!");
                     }
                     if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight())) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
+                        levelHud.setText("Dieded!");
                     }
 
                 }
@@ -263,6 +263,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(700, 360));
         setPreferredSize(new java.awt.Dimension(700, 360));
+        setResizable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
