@@ -35,14 +35,14 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
     private final hud debugHud = new hud();
     private final hud devnull = new hud();
     private final Ground zomg = new Ground();
+    private final Ground sky = new Ground();
 
     // Icons
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
     private final ImageIcon Test = new ImageIcon("src/resources/player.png");
     private final ImageIcon zomg_png = new ImageIcon("src/resources/zomg.png");
     private final ImageIcon border = new ImageIcon("src/resources/border.png");
-
-    boolean temp;
+    private final ImageIcon sky_png = new ImageIcon("src/resources/sky.png");
 
     public main() {
         initComponents();
@@ -63,30 +63,34 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Player
         Player.setLocation(30, 120);
 
+        // Hud
+        getContentPane().add(levelHud);
+        levelHud.setText("Level " + Player.getLevel());
+
         // Textures
         getContentPane().add(Ground_pic);
         Ground_pic.setLocation(0, 222);
+        // Dying
         getContentPane().add(zomg);
         zomg.setEnabled(false);
         zomg.setDisabledIcon(zomg_png);
         zomg.setSize(50, 30);
         zomg.setVisible(false);
-
+        // Sky
+        getContentPane().add(sky);
+        sky.setDisabledIcon(sky_png);
+        sky.setBounds(0, 0, 700, 30);
         // Level end
         getContentPane().add(levelEnd);
         levelEnd.setLocation(630, 0);
         levelEnd.setSize(10, 360);
         levelEnd.setDisabledIcon(border);
 
-        // Hud
-        getContentPane().add(levelHud);
-        levelHud.setText("Level " + Player.getLevel());
-
         // Debugging
         getContentPane().add(debugHud);
         debugHud.setBounds(530, 10, 200, 80);
         debugHud.setText("Debugging");
-
+        // Not visible
         getContentPane().add(devnull);
         devnull.setBounds(450, 10, 200, 80);
         devnull.setText("Status of Player");
@@ -118,11 +122,19 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             obstacleBot[i].randXbot();
             // Set obstacle to random position
             obstacleBot[i].setLocation(150 + obstacleBot[i].randXbot() * i, obstacleBot[i].randYbot);
+
+            // Spawned Tubes won't stack
             if (i > 0) {
                 if ((obstacleBot[i].getX() - obstacleBot[i - 1].getX()) < 50) {
-                    obstacleBot[i].setLocation(obstacleBot[i].getX() + 70, obstacleBot[i].getY());
+                    obstacleBot[i].setLocation(obstacleBot[i].getX() + 85, obstacleBot[i].getY());
                     debugHud.setText("Rearranged Bot " + i);
                 }
+            }
+
+            // Spawned Tubes behind level end will be removed
+            if (obstacleBot[i].getX() > levelEnd.getX()) {
+                getContentPane().remove(obstacleBot[i]);
+                debugHud.setText("Removed " + i);
             }
         }
 
@@ -136,9 +148,13 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
             if (i > 0) {
                 if ((obstacleTop[i].getX() - obstacleTop[i - 1].getX()) < 50) {
-                    obstacleTop[i].setLocation(obstacleTop[i].getX() + 70, obstacleTop[i].getY());
+                    obstacleTop[i].setLocation(obstacleTop[i].getX() + 85, obstacleTop[i].getY());
                     debugHud.setText("Rearranged Top " + i);
                 }
+            }
+            if (obstacleTop[i].getX() > levelEnd.getX()) {
+                getContentPane().remove(obstacleTop[i]);
+                debugHud.setText("Removed " + i);
             }
         }
     }
