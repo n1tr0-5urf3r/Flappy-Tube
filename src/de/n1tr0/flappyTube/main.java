@@ -31,11 +31,12 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
 
     // Graphics
     private final Ground Ground_pic = new Ground();
-    private final hud levelHud = new hud();
-    private final hud debugHud = new hud();
-    private final hud devnull = new hud();
     private final Ground zomg = new Ground();
     private final Ground sky = new Ground();
+    private final hud levelHud = new hud();
+    private final hud welcome = new hud();
+    private final hud debugHud = new hud();
+    private final hud devnull = new hud();
 
     // Icons
     private final ImageIcon TubeInv = new ImageIcon("src/resources/tubeinv.png");
@@ -66,6 +67,9 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Hud
         getContentPane().add(levelHud);
         levelHud.setText("Level " + Player.getLevel());
+        getContentPane().add(welcome);
+        welcome.setText("Press <SPACE> to start");
+        welcome.setBounds(220,120,300,30);
 
         // Textures
         getContentPane().add(Ground_pic);
@@ -178,6 +182,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
             public void run() {
                 while (Player.getStatus()) {
                     devnull.setText(String.valueOf(Player.getStatus()));
+                    System.out.println(Player.getStatus());
                     if (Player.getY() >= Ground.getY()) {
                         // Player dieded
                         System.out.println("dieded");
@@ -185,6 +190,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         Player.setStatus(false);
                         zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
                         zomg.setVisible(true);
+                         
                     }
                 }
             }
@@ -243,6 +249,8 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         levelHud.setText("Dieded!");
                         zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
                         zomg.setVisible(true);
+                        
+                        
                     }
                     if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight() - 7)) {
                         Player.setStatus(false);
@@ -267,6 +275,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         // Invoked when a key has been pressed.
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (Player.getStatus()) {
+                welcome.setVisible(false);
                 Thread move = new Thread() {
                     @Override
                     public void run() {

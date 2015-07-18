@@ -22,12 +22,13 @@ public class hud extends JLabel {
     public hud() {
         super();
         init();
+        this.setBounds(50, 35, height, width);
+
         
 
     }
 
     public void init() {
-        this.setBounds(50, 180, height, width);
         this.setForeground(Color.white);
         this.setLocation(50, 10);
         this.setFont(hudFont);
