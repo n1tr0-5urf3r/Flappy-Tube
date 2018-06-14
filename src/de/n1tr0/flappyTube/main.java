@@ -49,6 +49,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         initComponents();
 
         setContentPane(new JLabel(new ImageIcon("src/resources/background.png")));
+        this.setTitle(">_ N1tR0");
 
         // Initialize the player
         getContentPane().add(Player);
@@ -69,7 +70,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         levelHud.setText("Level " + Player.getLevel());
         getContentPane().add(welcome);
         welcome.setText("Press <SPACE> to start");
-        welcome.setBounds(220,120,300,30);
+        welcome.setBounds(220, 120, 300, 30);
 
         // Textures
         getContentPane().add(Ground_pic);
@@ -190,7 +191,7 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
                         Player.setStatus(false);
                         zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
                         zomg.setVisible(true);
-                         
+
                     }
                 }
             }
@@ -234,25 +235,22 @@ public class main extends javax.swing.JFrame implements ActionListener, KeyListe
         level.start();
     }
 
-    private void checkPlayerDieded(int i) {
+    private void checkPlayerDieded(final int i) {
         // Location of obstacle is in bottom left corner!
 
         Thread PlayerDieded = new Thread() {
             public void run() {
                 while (Player.getStatus()) {
                     devnull.setText(String.valueOf(Player.getStatus()));
-                    //System.out.println("Obstacle X: " + obstacleBot[0].getX() + " Y: " + obstacleBot[0].getY());
-                    //System.out.println("Player X: " + Player.getX() + " Y: " + Player.getY());
-                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() - 7 && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
+                    if (Player.getX() >= obstacleBot[i].getX() && Player.getX() <= obstacleBot[i].getX() + obstacleBot[i].getWidth() - 8 && Player.getY() + Player.getHeight() >= obstacleBot[i].getY()) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
                         zomg.setLocation(Player.getX(), Player.getY() - Player.getHeight());
                         zomg.setVisible(true);
-                        
-                        
+
                     }
-                    if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight() - 7)) {
+                    if (Player.getX() >= obstacleTop[i].getX() && Player.getX() <= obstacleTop[i].getX() + obstacleTop[i].getWidth() && Player.getY() >= obstacleTop[i].getY() && Player.getY() <= (obstacleTop[i].getY() + obstacleTop[i].getHeight() - 5)) {
                         Player.setStatus(false);
                         System.out.println("Dieded!");
                         levelHud.setText("Dieded!");
